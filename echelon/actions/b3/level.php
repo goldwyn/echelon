@@ -9,7 +9,7 @@ if(!$is_mask) // check which auth level is needed
 	$auth_name = 'edit_client_level';
 else
 	$auth_name = 'edit_mask';
-	
+
 $b3_conn = true; // this page needs to connect to the B3 database
 require '../../inc.php';
 
@@ -26,6 +26,9 @@ if(!$is_mask) {
 $level = cleanvar($_POST['level']);
 $client_id = cleanvar($_POST['cid']);
 $old_level = cleanvar($_POST['old-level']);
+if($old_level == 0)
+	$old_level = 1;
+
 $password = cleanvar($_POST['password']);
 
 ## Check Empties ##
@@ -75,7 +78,7 @@ if(!$is_mask)
 	$query = "UPDATE clients SET group_bits = ? WHERE id = ? LIMIT 1";
 else
 	$query = "UPDATE clients SET mask_level = ? WHERE id = ? LIMIT 1";
-	
+
 $stmt = $db->mysql->prepare($query) or sendBack('Database Error');
 $stmt->bind_param('ii', $level, $client_id);
 $stmt->execute();
